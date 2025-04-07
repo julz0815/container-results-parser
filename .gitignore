@@ -1,3 +1,4 @@
 node_modules
 Dockerfile
 dist/verademo1-tomcat.json
+juice-shop.json

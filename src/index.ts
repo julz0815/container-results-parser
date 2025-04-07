@@ -86,17 +86,38 @@ interface InspectData {
 }
 
 interface ScanData {
-    findings: {
-        vulnerabilities: {
-            matches: Array<{
-                artifact: {
-                    locations: Array<{
-                        layerID: string;
-                    }>;
-                };
-                vulnerability: Vulnerability;
-            }>;
+    raw_name: string;
+    docker: {
+        image: string;
+        raw_name: string;
+    };
+    iac: {
+        Metadata: {
+            OS: {
+                Family: string;
+                Name: string;
+            };
         };
+    };
+    vulnerabilities: {
+        matches: Array<{
+            artifact: {
+                locations: Array<{
+                    layerID: string;
+                }>;
+            };
+            vulnerability: {
+                id: string;
+                severity: string;
+                description?: string;
+                cwe?: string;
+                fix?: {
+                    versions?: string[];
+                    state?: string;
+                    description?: string;
+                };
+            };
+        }>;
     };
 }
 
@@ -466,7 +487,7 @@ function main() {
         }
 
         // Process scan data and map vulnerabilities
-        for (const finding of scanData.findings.vulnerabilities.matches) {
+        for (const finding of scanData.vulnerabilities.matches) {
             if (!finding.artifact || !finding.artifact.locations) {
                 throw new Error('cannot find vulnerability artifact in scan results');
             }
@@ -541,7 +562,7 @@ function main() {
             if (detailedReport) {
                 console.log('\nDetailed Findings:');
                 console.log('-----------------');
-                const layerFindings = scanData.findings.vulnerabilities.matches.filter(match => 
+                const layerFindings = scanData.vulnerabilities.matches.filter(match => 
                     match.artifact.locations.some(loc => loc.layerID === layerID)
                 );
                 
@@ -604,7 +625,7 @@ function main() {
         if (detailedReport) {
             console.log('\nDetailed Findings:');
             console.log('-----------------');
-            const baseImageFindings = scanData.findings.vulnerabilities.matches.filter(match => 
+            const baseImageFindings = scanData.vulnerabilities.matches.filter(match => 
                 match.artifact.locations.some(loc => loc.layerID === baseImageLayer)
             );
             

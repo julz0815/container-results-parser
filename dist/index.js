@@ -2211,7 +2211,7 @@ function main() {
             }
             layerNum++;
         }
-        for (const finding of scanData.findings.vulnerabilities.matches) {
+        for (const finding of scanData.vulnerabilities.matches) {
             if (!finding.artifact || !finding.artifact.locations) {
                 throw new Error('cannot find vulnerability artifact in scan results');
             }
@@ -2269,7 +2269,7 @@ function main() {
             if (detailedReport) {
                 console.log('\nDetailed Findings:');
                 console.log('-----------------');
-                const layerFindings = scanData.findings.vulnerabilities.matches.filter(match => match.artifact.locations.some(loc => loc.layerID === layerID));
+                const layerFindings = scanData.vulnerabilities.matches.filter(match => match.artifact.locations.some(loc => loc.layerID === layerID));
                 for (const finding of layerFindings) {
                     console.log(`\nVulnerability: ${finding.vulnerability.id}`);
                     console.log(`Severity: ${finding.vulnerability.severity}`);
@@ -2321,7 +2321,7 @@ function main() {
         if (detailedReport) {
             console.log('\nDetailed Findings:');
             console.log('-----------------');
-            const baseImageFindings = scanData.findings.vulnerabilities.matches.filter(match => match.artifact.locations.some(loc => loc.layerID === baseImageLayer));
+            const baseImageFindings = scanData.vulnerabilities.matches.filter(match => match.artifact.locations.some(loc => loc.layerID === baseImageLayer));
             for (const finding of baseImageFindings) {
                 console.log(`\nVulnerability: ${finding.vulnerability.id}`);
                 console.log(`Severity: ${finding.vulnerability.severity}`);
